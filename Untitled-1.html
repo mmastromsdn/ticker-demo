@@ -39,8 +39,11 @@
     const response = await fetch(url);
     if (!response.ok) throw new Error("Network response was not ok");
     const text = await response.text();
-    const rows = text.split("\n").map(r => r.trim()).filter(r => r);
-    document.getElementById("ticker").textContent = rows.join(" • ");
+    const rows = text.split("\n")
+  .map(r => r.split(",")[0].trim()) // take only the first column
+  .filter(r => r && r.toLowerCase() !== "name"); // skip empty and header
+document.getElementById("ticker").textContent = rows.join(" • ");
+
   } catch (err) {
     document.getElementById("ticker").textContent = "Error loading names: " + err.message;
     console.error("Fetch error", err);
@@ -53,5 +56,6 @@
   </script>
 </body>
 </html>
+
 
 
