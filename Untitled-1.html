@@ -18,7 +18,7 @@
       display: inline-block;
       white-space: nowrap;
       padding-left: 100%;
-      animation: ticker 30s linear infinite; /* slower speed */
+      animation: ticker 60s linear infinite; /* slower speed */
     }
     @keyframes ticker {
       0%   { transform: translateX(0); }
@@ -46,9 +46,11 @@
         const text = await response.text();
 
         // Parse only the first column (names), skip header
-        const rows = text.split("\n")
-          .map(r => r.split(",")[0].trim())
-          .filter(r => r && r.toLowerCase() !== "name");
+       // Parse only the first column (names), skip header, remove quotes
+const rows = text.split("\n")
+  .map(r => r.split(",")[0].trim().replace(/^"|"$/g, "")) // remove leading/trailing quotes
+  .filter(r => r && r.toLowerCase() !== "name");
+
 
         document.getElementById("ticker").textContent = rows.join(" • ");
       } catch (err) {
@@ -62,3 +64,4 @@
   </script>
 </body>
 </html>
+
