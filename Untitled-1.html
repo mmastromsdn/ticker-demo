@@ -33,29 +33,32 @@
   </div>
 
   <script>
-   async function loadNames() {
-  const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://docs.google.com/spreadsheets/d/e/2PACX-1vT53HRz3RG6r4x7c0HOVlfMHygdSuTqnWp5n7gOAgaI5yZcyEdFKW7eNJ9dpHjKtC5FVyRRkqlQXNW/pub?output=csv");
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Network response was not ok");
-    const text = await response.text();
-    const rows = text.split("\n")
-  .map(r => r.split(",")[0].trim()) // take only the first column
-  .filter(r => r && r.toLowerCase() !== "name"); // skip empty and header
-document.getElementById("ticker").textContent = rows.join(" • ");
+  async function loadNames() {
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT53HRzZ3RG6r4x7c0HOVlfMHygdSuTqnWp5n7gOAgaI5yZcyEdFKW7eNJ9dpHjKtC5FVyRRkqlQXNW/pub?output=csv";
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Network response was not ok");
+      const text = await response.text();
 
-  } catch (err) {
-    document.getElementById("ticker").textContent = "Error loading names: " + err.message;
-    console.error("Fetch error", err);
+      // Split into rows, then take only the first column (names)
+      const rows = text.split("\n")
+        .map(r => r.split(",")[0].trim())   // first column only
+        .filter(r => r && r.toLowerCase() !== "name"); // skip empty + header
+
+      document.getElementById("ticker").textContent = rows.join(" • ");
+    } catch (err) {
+      document.getElementById("ticker").textContent = "Error loading names: " + err.message;
+      console.error("Fetch error", err);
+    }
   }
-}
 
+  loadNames();
+  setInterval(loadNames, 300000); // refresh every 5 minutes
+</script>
 
-    loadNames();
-    setInterval(loadNames, 300000); // refresh every 5 minutes
-  </script>
 </body>
 </html>
+
 
 
 
